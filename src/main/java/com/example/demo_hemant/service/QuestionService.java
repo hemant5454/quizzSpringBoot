@@ -1,5 +1,5 @@
 package com.example.demo_hemant.service;
-import com.example.demo_hemant.Question;
+import com.example.demo_hemant.model.Question;
 import com.example.demo_hemant.dao.QuestionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,5 +18,10 @@ public class QuestionService {
 
     public List<Question> getQuestionByCategory(String category) {
         return questionDao.findByCategory(category);
+    }
+
+    public String addQuestion(Question question) {
+        questionDao.save(question);
+        return "Success.";
     }
 }
