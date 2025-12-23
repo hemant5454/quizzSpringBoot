@@ -26,5 +26,5 @@ COPY --from=build /app/target/demo_hemant-0.0.1-SNAPSHOT.jar app.jar
 # Expose port
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-Dserver.port=${PORT:-8080}", "-jar", "app.jar"]
+# Run the application (using shell form to support environment variables)
+CMD java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar app.jar
