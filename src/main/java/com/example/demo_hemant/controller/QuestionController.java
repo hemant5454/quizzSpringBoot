@@ -1,12 +1,14 @@
 package com.example.demo_hemant.controller;
 
 import com.example.demo_hemant.model.Question;
+import com.example.demo_hemant.model.QuestionWrapper;
 import com.example.demo_hemant.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("question")
 public class QuestionController {
