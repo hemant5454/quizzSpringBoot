@@ -1,0 +1,324 @@
+/* Dashboard.css */
+
+.dashboard {
+    width: 100%;
+}
+
+.welcome-section {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 0.5rem 0;
+}
+
+.welcome-subtitle {
+    font-size: 1.15rem;
+    color: #6c757d;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Action Cards */
+.action-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.action-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+}
+
+.action-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.action-card.primary {
+    border-color: #667eea;
+}
+
+.action-card.primary:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.action-card.success {
+    border-color: #48bb78;
+}
+
+.action-card.success:hover {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+}
+
+.action-card.info {
+    border-color: #4299e1;
+}
+
+.action-card.info:hover {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    color: white;
+}
+
+.action-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.action-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.action-card p {
+    color: #6c757d;
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+}
+
+.action-card:hover p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.action-badge {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.action-card:hover .action-badge {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Recent Section */
+.recent-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+.view-all-link {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-all-link:hover {
+    color: #764ba2;
+    transform: translateX(4px);
+}
+
+.recent-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recent-quiz-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+/* Creator Badge for Dashboard */
+.creator-badge-small {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(102, 126, 234, 0.95);
+    color: white;
+    padding: 0.35rem 0.65rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recent-quiz-card:hover .creator-badge-small {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.recent-quiz-card:hover {
+    background: white;
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recent-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.recent-content {
+    flex: 1;
+}
+
+.recent-content h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 0.25rem 0;
+}
+
+.recent-category {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.quick-play-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.quick-play-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stat-icon {
+    font-size: 3rem;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+.stat-content p {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1rem;
+    }
+
+    .action-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .action-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .recent-section {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-title {
+        font-size: 1.75rem;
+    }
+
+    .recent-quiz-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .quick-play-button {
+        width: 100%;
+    }
+}

@@ -18,12 +18,13 @@ public class QuizController {
     QuizService quizService;
 
     @PostMapping("create")
-    public String createQuiz(@RequestParam String category, @RequestParam Integer numQ, @RequestParam String title) {
+    public String createQuiz(@RequestParam String category, @RequestParam Integer numQ, @RequestParam String title, @RequestParam(required = false) String createdBy) {
         System.out.println("In backend");
         System.out.println("Category = " + category);
         System.out.println("NumQ = " + numQ);
         System.out.println("Title = " + title);
-        return quizService.createQuiz(category, numQ, title);
+        System.out.println("Created By = " + createdBy);
+        return quizService.createQuiz(category, numQ, title, createdBy);
     }
     @PostMapping("get/{id}")
     public List<QuestionWrapper> getQuestions(@PathVariable Integer id) {
@@ -40,5 +41,10 @@ public class QuizController {
     @GetMapping("all")
     public List<Quiz> getAllQuizzes() {
         return quizService.getAllQuizzes();
+    }
+
+    @DeleteMapping("delete/{id}")
+    public String deleteQuiz(@PathVariable Integer id) {
+        return quizService.deleteQuiz(id);
     }
 }

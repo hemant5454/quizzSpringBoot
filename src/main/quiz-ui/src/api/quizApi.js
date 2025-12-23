@@ -6,14 +6,15 @@ export const fetchQuizzes = async () => {
     return res.json();
 };
 
-export const createQuiz = async ( {category, numQuestions, title }) => {
+export const createQuiz = async ( {category, numQuestions, title, createdBy }) => {
     console.log("=== createQuiz API called ===");
     console.log("category:", category);
     console.log("numQuestions:", numQuestions);
     console.log("title:", title);
+    console.log("createdBy:", createdBy);
 
     // 🔍 PRINT FINAL URL
-    const url = `http://localhost:8080/quiz/create?category=${category}&numQ=${numQuestions}&title=${title}`;
+    const url = `http://localhost:8080/quiz/create?category=${encodeURIComponent(category)}&numQ=${numQuestions}&title=${encodeURIComponent(title)}&createdBy=${encodeURIComponent(createdBy || 'Anonymous')}`;
     console.log("Final request URL:", url);
 
     const res = await fetch(url, {
@@ -44,4 +45,13 @@ export const submitQuiz = async (quizId, responses) => {
 
     if (!res.ok) throw new Error("Failed to submit quiz");
     return res.json(); // integer score
+};
+
+export const deleteQuiz = async (quizId) => {
+    const res = await fetch(`http://localhost:8080/quiz/delete/${quizId}`, {
+        method: "DELETE"
+    });
+
+    if (!res.ok) throw new Error("Failed to delete quiz");
+    return res.text();
 };
