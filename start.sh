@@ -7,32 +7,34 @@ echo "PORT is set: $([ -n "$PORT" ] && echo 'YES' || echo 'NO')"
 # Parse DATABASE_URL and extract components
 # Expected format: postgresql://username:password@host:port/database
 if [ -n "$DATABASE_URL" ]; then
-  echo "Parsing DATABASE_URL..."
+  echo "Original DATABASE_URL: $DATABASE_URL"
 
-  # Remove the postgresql:// prefix
-  DB_CREDS=$(echo "$DATABASE_URL" | sed 's|^postgresql://||')
+  # Use parameter expansion to parse the URL
+  # Remove postgresql:// prefix
+  temp="${DATABASE_URL#postgresql://}"
 
-  # Extract everything before @ (username:password)
-  USER_PASS=$(echo "$DB_CREDS" | cut -d@ -f1)
-
-  # Extract username (before the :)
-  SPRING_DATASOURCE_USERNAME=$(echo "$USER_PASS" | cut -d: -f1)
+  # Extract username (everything before first :)
+  SPRING_DATASOURCE_USERNAME="${temp%%:*}"
   export SPRING_DATASOURCE_USERNAME
 
-  # Extract password (after the :)
-  SPRING_DATASOURCE_PASSWORD=$(echo "$USER_PASS" | cut -d: -f2)
+  # Remove username and : to get password@host/db
+  temp="${temp#*:}"
+
+  # Extract password (everything before @)
+  SPRING_DATASOURCE_PASSWORD="${temp%%@*}"
   export SPRING_DATASOURCE_PASSWORD
 
-  # Extract everything after @ (host:port/database)
-  DB_HOST=$(echo "$DB_CREDS" | cut -d@ -f2)
+  # Extract host/port/database (everything after @)
+  DB_HOST="${temp#*@}"
 
   # Build JDBC URL
   SPRING_DATASOURCE_URL="jdbc:postgresql://${DB_HOST}"
   export SPRING_DATASOURCE_URL
 
-  echo "Database configuration:"
+  echo "Parsed database configuration:"
   echo "  URL: $SPRING_DATASOURCE_URL"
   echo "  User: $SPRING_DATASOURCE_USERNAME"
+  echo "  Password length: ${#SPRING_DATASOURCE_PASSWORD}"
 else
   echo "WARNING: DATABASE_URL not set! Using defaults from application.properties"
 fi
