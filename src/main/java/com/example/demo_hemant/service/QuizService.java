@@ -22,10 +22,12 @@ public class QuizService {
     @Autowired
     QuestionDao questionDao;
 
-    public String createQuiz(String category, Integer numQ, String title) {
+    public String createQuiz(String category, Integer numQ, String title, String createdBy) {
         List<Question> questions = questionDao.findRandomQuestionByCategory(category, numQ);
         Quiz quiz = new Quiz();
         quiz.setTitle(title);
+        quiz.setCategory(category);
+        quiz.setCreatedBy(createdBy);
         quiz.setQuestions(questions);
         quizDao.save(quiz);
 
@@ -51,8 +53,8 @@ public class QuizService {
         Integer result = 0;
         Optional<Quiz> quiz = quizDao.findById(id);
         List<Question> questions = quiz.get().getQuestions();
-    System.out.println("Questions: " + questions);
-    Integer i = 0;
+        System.out.println("Questions: " + questions);
+        Integer i = 0;
         for (Response r:responses) {
             System.out.println("Responses:" + r);
             Integer qId = r.getId();
@@ -69,5 +71,17 @@ public class QuizService {
 
     public List<Quiz> getAllQuizzes() {
         return quizDao.findAll();
+    }
+
+    public String deleteQuiz(Integer id) {
+        try {
+            if (!quizDao.existsById(id)) {
+                return "Quiz not found";
+            }
+            quizDao.deleteById(id);
+            return "Quiz deleted successfully";
+        } catch (Exception e) {
+            return "Failed to delete quiz: " + e.getMessage();
+        }
     }
 }
