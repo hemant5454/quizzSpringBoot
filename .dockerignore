@@ -1,0 +1,10 @@
+target/
+.mvn/
+*.log
+*.tmp
+.git
+.gitignore
+README.md
+my_env/
+src/main/quiz-frontend/
+src/main/quiz-ui/
