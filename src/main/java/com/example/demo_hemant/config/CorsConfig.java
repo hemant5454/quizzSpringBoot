@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://quizz-spring-boot-p18j76om8-hemant5454s-projects.vercel.app")
+                        .allowedOrigins("https://quizz-spring-boot.vercel.app")
                         .allowedMethods("*")
                         .allowedHeaders("*");
             }
