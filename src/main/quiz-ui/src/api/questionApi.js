@@ -1,7 +1,7 @@
 import API_BASE_URL from "./apiConfig";
 
 export const addQuestion = async (questionData) => {
-    const res = await fetch("${API_BASE_URL}/question/add", {
+    const res = await fetch(`${API_BASE_URL}/question/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(questionData),
