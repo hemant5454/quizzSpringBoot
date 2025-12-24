@@ -1,47 +1,104 @@
 import { useState } from "react";
 import { addQuestion } from "../api/questionApi";
+import "./AddQuestion.css";
 
 function AddQuestion({ onQuestionAdded }) {
     const [form, setForm] = useState({
-        questionTitle: "",
+        QuestionTitle: "",
         option1: "",
         option2: "",
         option3: "",
         option4: "",
         correctAnswer: "",
         difficultyLevel: "Easy",
+        category: ""
     });
 
-    const [category, setCategory] = useState("");
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+    };
 
     const submit = async () => {
-        const payload = {
-            QuestionTitle: form.questionTitle,
-            option1: form.option1,
-            option2: form.option2,
-            option3: form.option3,
-            option4: form.option4,
-            correctAnswer: form.correctAnswer,
-            difficultyLevel: form.difficultyLevel,
-            category,
-        };
-
-        await addQuestion(payload);
-        onQuestionAdded && onQuestionAdded();
-        alert("Question added");
+        try {
+            await addQuestion(form);
+            alert("✅ Question added successfully");
+            onQuestionAdded && onQuestionAdded();
+            setForm({
+                QuestionTitle: "",
+                option1: "",
+                option2: "",
+                option3: "",
+                option4: "",
+                correctAnswer: "",
+                difficultyLevel: "Easy",
+                category: ""
+            });
+        } catch (err) {
+            alert("❌ Failed to add question");
+        }
     };
 
     return (
-        <div>
-            <h3>Add Question</h3>
-            <input placeholder="Title" onChange={e => setForm({...form, questionTitle:e.target.value})}/>
-            <input placeholder="Option 1" onChange={e => setForm({...form, option1:e.target.value})}/>
-            <input placeholder="Option 2" onChange={e => setForm({...form, option2:e.target.value})}/>
-            <input placeholder="Option 3" onChange={e => setForm({...form, option3:e.target.value})}/>
-            <input placeholder="Option 4" onChange={e => setForm({...form, option4:e.target.value})}/>
-            <input placeholder="Correct Answer" onChange={e => setForm({...form, correctAnswer:e.target.value})}/>
-            <input placeholder="Category" onChange={e => setCategory(e.target.value)}/>
-            <button onClick={submit}>Save</button>
+        <div className="add-question-container">
+            <h2>Add New Question</h2>
+
+            <div className="form-group">
+                <label>Question</label>
+                <textarea
+                    name="QuestionTitle"
+                    value={form.QuestionTitle}
+                    onChange={handleChange}
+                    placeholder="Enter question here"
+                />
+            </div>
+
+            <div className="options-grid">
+                <input name="option1" value={form.option1} onChange={handleChange} placeholder="Option A" />
+                <input name="option2" value={form.option2} onChange={handleChange} placeholder="Option B" />
+                <input name="option3" value={form.option3} onChange={handleChange} placeholder="Option C" />
+                <input name="option4" value={form.option4} onChange={handleChange} placeholder="Option D" />
+            </div>
+
+            <div className="form-group">
+                <label>Correct Answer</label>
+                <select name="correctAnswer" value={form.correctAnswer} onChange={handleChange}>
+                    <option value="">Select correct option</option>
+                    <option value={form.option1}>Option A</option>
+                    <option value={form.option2}>Option B</option>
+                    <option value={form.option3}>Option C</option>
+                    <option value={form.option4}>Option D</option>
+                </select>
+            </div>
+
+            <div className="form-row">
+                <div>
+                    <label>Category</label>
+                    <input
+                        name="category"
+                        value={form.category}
+                        onChange={handleChange}
+                        placeholder="e.g. Current Affairs"
+                    />
+                </div>
+
+                <div>
+                    <label>Difficulty</label>
+                    <select
+                        name="difficultyLevel"
+                        value={form.difficultyLevel}
+                        onChange={handleChange}
+                    >
+                        <option>Easy</option>
+                        <option>Medium</option>
+                        <option>Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <button className="save-btn" onClick={submit}>
+                Save Question
+            </button>
         </div>
     );
 }

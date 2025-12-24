@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
 @RequestMapping("question")
 public class QuestionController {
@@ -29,6 +29,7 @@ public class QuestionController {
 
     @PostMapping("add")
     public String addQuestion(@RequestBody Question question) {
+        System.out.println("hemant_dbg question: " + question);
         return questionService.addQuestion(question);
     }
 }
