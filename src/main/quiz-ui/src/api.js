@@ -6,7 +6,7 @@ export const getQuestions = async (category) => {
     try {
         const url = category
             ? `${API_BASE_URL}/question/${category}`
-            : "${API_BASE_URL}/question/allQuestions";
+            : `${API_BASE_URL}/question/allQuestions`;
 
         const res = await fetch(url);
 

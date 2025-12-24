@@ -21,7 +21,7 @@ function AddQuestion({ goBack }) {
     };
 
     const submitQuestion = () => {
-        fetch("${API_BASE_URL}/api/questions", {
+        fetch(`${API_BASE_URL}/api/questions`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(question),
