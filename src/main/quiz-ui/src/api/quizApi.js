@@ -1,5 +1,7 @@
+import API_BASE_URL from "./apiConfig";
+
 export const fetchQuizzes = async () => {
-    const res = await fetch(`http://localhost:8080/quiz/all`, {
+    const res = await fetch(`${API_BASE_URL}/quiz/all`, {
         method: "GET"
     });
     if (!res.ok) throw new Error("Failed to fetch quizzes");
@@ -14,7 +16,7 @@ export const createQuiz = async ( {category, numQuestions, title, createdBy }) =
     console.log("createdBy:", createdBy);
 
     // 🔍 PRINT FINAL URL
-    const url = `http://localhost:8080/quiz/create?category=${encodeURIComponent(category)}&numQ=${numQuestions}&title=${encodeURIComponent(title)}&createdBy=${encodeURIComponent(createdBy || 'Anonymous')}`;
+    const url = `${API_BASE_URL}/quiz/create?category=${encodeURIComponent(category)}&numQ=${numQuestions}&title=${encodeURIComponent(title)}&createdBy=${encodeURIComponent(createdBy || 'Anonymous')}`;
     console.log("Final request URL:", url);
 
     const res = await fetch(url, {
@@ -29,7 +31,7 @@ export const createQuiz = async ( {category, numQuestions, title, createdBy }) =
 };
 
 export const fetchQuizById = async (id) => {
-    const res = await fetch(`http://localhost:8080/quiz/get/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/quiz/get/${id}`, {
         method: "POST"
     });
     if (!res.ok) throw new Error("Failed to fetch quizzes2");
@@ -37,7 +39,7 @@ export const fetchQuizById = async (id) => {
 };
 
 export const submitQuiz = async (quizId, responses) => {
-    const res = await fetch(`http://localhost:8080/quiz/submit/${quizId}`, {
+    const res = await fetch(`${API_BASE_URL}/quiz/submit/${quizId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(responses)
@@ -48,7 +50,7 @@ export const submitQuiz = async (quizId, responses) => {
 };
 
 export const deleteQuiz = async (quizId) => {
-    const res = await fetch(`http://localhost:8080/quiz/delete/${quizId}`, {
+    const res = await fetch(`${API_BASE_URL}/quiz/delete/${quizId}`, {
         method: "DELETE"
     });
 
