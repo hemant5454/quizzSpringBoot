@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createQuiz } from "../api/quizApi";
+import { getCategories } from "../api/questionApi";
 import { useAuth } from "../context/AuthContext";
 import "./CreateQuiz.css";
 
@@ -10,6 +11,23 @@ function CreateQuiz({ onQuizCreated }) {
     const [title, setTitle] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [loadingCategories, setLoadingCategories] = useState(true);
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const data = await getCategories();
+            setCategories(data);
+        } catch (err) {
+            console.error("Failed to load categories:", err);
+        } finally {
+            setLoadingCategories(false);
+        }
+    };
 
     const submit = async () => {
         if (!category.trim() || !title.trim()) {
@@ -68,15 +86,21 @@ function CreateQuiz({ onQuizCreated }) {
 
                 <div className="form-group">
                     <label htmlFor="quiz-category">Category</label>
-                    <input
+                    <select
                         id="quiz-category"
-                        type="text"
-                        className="form-input"
-                        placeholder="e.g., Programming, Science, History"
+                        className="form-select"
                         value={category}
                         onChange={e => setCategory(e.target.value)}
-                        disabled={loading}
-                    />
+                        disabled={loading || loadingCategories}
+                    >
+                        <option value="">-- Select Category --</option>
+                        {categories.map((cat) => (
+                            <option key={cat.category} value={cat.category}>
+                                {cat.category} ({cat.questionCount} questions)
+                            </option>
+                        ))}
+                    </select>
+                    {loadingCategories && <small className="form-hint">Loading categories...</small>}
                 </div>
 
                 <div className="form-group">

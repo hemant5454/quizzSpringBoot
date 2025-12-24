@@ -1,12 +1,16 @@
 package com.example.demo_hemant.controller;
 
+
+import com.example.demo_hemant.dto.CategoryStats;
 import com.example.demo_hemant.model.Question;
 import com.example.demo_hemant.model.QuestionWrapper;
 import com.example.demo_hemant.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -16,11 +20,18 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
+
     @GetMapping("allQuestions")
     public List<Question> getAllQuestions() {
 
         return questionService.getAllQuestions();
     }
+
+    @GetMapping("categories")
+    public List<CategoryStats> getCategories() {
+        return questionService.getCategoriesWithStats();
+    }
+
     @GetMapping("category/{category}")
     public List<Question> getQuestionsByCategory(@PathVariable String category) {
 
@@ -29,13 +40,8 @@ public class QuestionController {
 
     @PostMapping("add")
     public String addQuestion(@RequestBody Question question) {
-//        System.out.println("hemant_dbg question: " + question);
+        System.out.println("hemant_dbg question: " + question);
         return questionService.addQuestion(question);
     }
-    @PostMapping("addList")
-    public String addQuestionsList(@RequestBody List<Question> question) {
-        return questionService.addQuestionsList(question);
-    }
+
 }
-
-
