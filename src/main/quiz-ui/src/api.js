@@ -1,10 +1,12 @@
 // src/api.js
+import API_BASE_URL from "./api/apiConfig";
+
 
 export const getQuestions = async (category) => {
     try {
         const url = category
-            ? `http://localhost:8080/question/${category}`
-            : "http://localhost:8080/question/allQuestions";
+            ? `${API_BASE_URL}/question/${category}`
+            : "${API_BASE_URL}/question/allQuestions";
 
         const res = await fetch(url);
 
@@ -19,7 +21,7 @@ export const getQuestions = async (category) => {
 
 export const addQuestion = async (questionData) => {
     try {
-        const res = await fetch("http://localhost:8080/question/add", {
+        const res = await fetch("${API_BASE_URL}/question/add", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(questionData),

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API_BASE_URL from "./api/apiConfig";
 
 function AddQuestion({ goBack }) {
     const [question, setQuestion] = useState({
@@ -20,7 +21,7 @@ function AddQuestion({ goBack }) {
     };
 
     const submitQuestion = () => {
-        fetch("http://localhost:8080/api/questions", {
+        fetch("${API_BASE_URL}/api/questions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(question),

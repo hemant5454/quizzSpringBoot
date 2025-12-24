@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Login.css";
+import API_BASE_URL from "../api/apiConfig";
 
 function Login({ onLogin }) {
     const [credentials, setCredentials] = useState({
@@ -17,7 +18,7 @@ function Login({ onLogin }) {
 
         try {
             const endpoint = isSignup ? "signup" : "login";
-            const response = await fetch(`http://localhost:8080/auth/${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}/auth/${endpoint}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
