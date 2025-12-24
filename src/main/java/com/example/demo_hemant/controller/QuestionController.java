@@ -34,7 +34,6 @@ public class QuestionController {
     }
     @PostMapping("addList")
     public String addQuestionsList(@RequestBody List<Question> question) {
-//        System.out.println("hemant_dbg question: " + question);
         return questionService.addQuestionsList(question);
     }
 }
