@@ -24,4 +24,11 @@ public class QuestionService {
         questionDao.save(question);
         return "Success.";
     }
+
+    public String addQuestionsList(List<Question> question) {
+        for (Question q:question) {
+            questionDao.save(q);
+        }
+        return "Success.";
+    }
 }
