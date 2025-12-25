@@ -1,17 +1,18 @@
 package com.example.demo_hemant.service;
 
 import com.example.demo_hemant.dao.QuestionDao;
-import com.example.demo_hemant.model.Question;
+import com.example.demo_hemant.dao.QuizResultDao;
+import com.example.demo_hemant.dto.LeaderboardEntry;
+import com.example.demo_hemant.model.*;
 import com.example.demo_hemant.dao.QuizDao;
-import com.example.demo_hemant.model.QuestionWrapper;
-import com.example.demo_hemant.model.Quiz;
-import com.example.demo_hemant.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class QuizService {
@@ -21,6 +22,9 @@ public class QuizService {
 
     @Autowired
     QuestionDao questionDao;
+
+    @Autowired
+    QuizResultDao quizResultDao;
 
     public String createQuiz(String category, Integer numQ, String title, String createdBy) {
         List<Question> questions = questionDao.findRandomQuestionByCategory(category, numQ);
@@ -56,17 +60,49 @@ public class QuizService {
         System.out.println("Questions: " + questions);
         Integer i = 0;
         for (Response r:responses) {
-            System.out.println("Responses:" + r);
             Integer qId = r.getId();
             String qResponse = r.getResponse();
-            System.out.println("----1-----");
             String correctResponse = questions.get(i).getCorrectAnswer();
-            System.out.println("----2-----");
             if(qResponse.equals(correctResponse)) result++;
-            System.out.println("Result: " + result);
             i++;
         }
         return result;
+    }
+
+    public QuizResult saveQuizResult(Integer quizId, String username, String playerName, Integer score) {
+        Optional<Quiz> quizOpt = quizDao.findById(quizId);
+        if (quizOpt.isEmpty()) {
+            throw new RuntimeException("Quiz not found");
+        }
+
+        Quiz quiz = quizOpt.get();
+        QuizResult result = new QuizResult();
+        result.setQuiz(quiz);
+        result.setUsername(username);
+        result.setPlayerName(playerName);
+        result.setScore(score);
+        result.setTotalQuestions(quiz.getQuestions().size());
+
+        return quizResultDao.save(result);
+    }
+
+    public List<LeaderboardEntry> getLeaderboard(Integer quizId) {
+        List<QuizResult> results = quizResultDao.findLeaderboardByQuizId(quizId);
+
+        return IntStream.range(0, results.size())
+                .mapToObj(index -> {
+                    QuizResult result = results.get(index);
+                    return new LeaderboardEntry(
+                            index + 1,
+                            result.getUsername(),
+                            result.getPlayerName(),
+                            result.getScore(),
+                            result.getTotalQuestions(),
+                            result.getPercentage(),
+                            result.getCompletedAt()
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     public List<Quiz> getAllQuizzes() {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchQuizzes, deleteQuiz } from "../api/quizApi";
+import { fetchQuizzes, deleteQuiz, getLeaderboard } from "../api/quizApi";
 import "./QuizList.css";
 
 function QuizList({ onPlay }) {
@@ -12,6 +12,8 @@ function QuizList({ onPlay }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [categories, setCategories] = useState([]);
+    const [leaderboards, setLeaderboards] = useState({});
+    const [loadingLeaderboards, setLoadingLeaderboards] = useState({});
 
     useEffect(() => {
         setLoading(true);
@@ -79,6 +81,28 @@ function QuizList({ onPlay }) {
     const handleClearFilters = () => {
         setSearchTerm("");
         setSelectedCategory("all");
+    };
+
+    const handleToggleLeaderboard = async (quizId, e) => {
+        e.stopPropagation();
+
+        // If already showing, hide it
+        if (leaderboards[quizId]) {
+            setLeaderboards(prev => ({ ...prev, [quizId]: null }));
+            return;
+        }
+
+        // Fetch leaderboard data
+        setLoadingLeaderboards(prev => ({ ...prev, [quizId]: true }));
+        try {
+            const data = await getLeaderboard(quizId);
+            setLeaderboards(prev => ({ ...prev, [quizId]: data }));
+        } catch (err) {
+            console.error("Failed to fetch leaderboard:", err);
+            alert("Failed to load leaderboard");
+        } finally {
+            setLoadingLeaderboards(prev => ({ ...prev, [quizId]: false }));
+        }
     };
 
     const visibleQuizzes = filteredQuizzes.slice(0, displayCount);
@@ -217,7 +241,38 @@ function QuizList({ onPlay }) {
                                         <span className="play-icon">▶</span>
                                         Start Quiz
                                     </button>
+                                    <button
+                                        className="leaderboard-button"
+                                        onClick={(e) => handleToggleLeaderboard(q.id, e)}
+                                        disabled={loadingLeaderboards[q.id]}
+                                    >
+                                        {loadingLeaderboards[q.id] ? "Loading..." : (leaderboards[q.id] ? "Hide 🏆" : "Show 🏆")}
+                                    </button>
                                 </div>
+                                {leaderboards[q.id] && (
+                                    <div className="card-leaderboard">
+                                        <h4 className="card-leaderboard-title">🏆 Leaderboard</h4>
+                                        {leaderboards[q.id].length === 0 ? (
+                                            <p className="no-entries">No one has played yet!</p>
+                                        ) : (
+                                            <div className="card-leaderboard-list">
+                                                {leaderboards[q.id].slice(0, 5).map((entry) => (
+                                                    <div key={entry.rank} className={`card-leaderboard-entry ${entry.rank <= 3 ? 'top-three-card' : ''}`}>
+                                                        <span className="entry-rank">
+                                                            {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                                                        </span>
+                                                        <span className="entry-player">{entry.playerName}</span>
+                                                        <span className="entry-score">{entry.score}/{entry.totalQuestions}</span>
+                                                        <span className="entry-percentage">{entry.percentage}%</span>
+                                                    </div>
+                                                ))}
+                                                {leaderboards[q.id].length > 5 && (
+                                                    <p className="more-entries">+{leaderboards[q.id].length - 5} more players</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

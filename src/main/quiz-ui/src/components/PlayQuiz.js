@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { fetchQuizById, submitQuiz } from "../api/quizApi";
+import { fetchQuizById, submitQuiz, getLeaderboard } from "../api/quizApi";
+import { useAuth } from "../context/AuthContext";
 import "./PlayQuiz.css";
 
 function PlayQuiz({ quizId }) {
+    const { user } = useAuth();
     const [questions, setQuestions] = useState([]);
     const [responses, setResponses] = useState([]);
     const [result, setResult] = useState(null);
@@ -10,6 +12,10 @@ function PlayQuiz({ quizId }) {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [showPlayerForm, setShowPlayerForm] = useState(false);
+    const [playerName, setPlayerName] = useState("");
+    const [leaderboard, setLeaderboard] = useState([]);
+    const [showLeaderboard, setShowLeaderboard] = useState(false);
 
     useEffect(() => {
         if (quizId) {
@@ -35,16 +41,40 @@ function PlayQuiz({ quizId }) {
     };
 
     const handleSubmit = async () => {
+        if (responses.length !== questions.length) {
+            setError("Please answer all questions");
+            return;
+        }
+        setShowPlayerForm(true);
+    };
+
+    const handleFinalSubmit = async () => {
+        if (!playerName.trim()) {
+            setError("Please enter your name");
+            return;
+        }
+
         setSubmitting(true);
         setError(null);
 
         try {
-            const score = await submitQuiz(quizId, responses);
-            setResult(score);
+            const response = await submitQuiz(quizId, responses, user?.username || 'guest', playerName);
+            setResult(response);
+            await loadLeaderboard();
+            setShowPlayerForm(false);
         } catch (err) {
             setError(err.message || "Failed to submit quiz");
         } finally {
             setSubmitting(false);
+        }
+    };
+
+    const loadLeaderboard = async () => {
+        try {
+            const data = await getLeaderboard(quizId);
+            setLeaderboard(data);
+        } catch (err) {
+            console.error("Failed to load leaderboard:", err);
         }
     };
 
@@ -112,7 +142,9 @@ function PlayQuiz({ quizId }) {
     }
 
     if (result !== null) {
-        const percentage = Math.round((result / questions.length) * 100);
+        const percentage = result.percentage || Math.round((result.score / questions.length) * 100);
+        const score = typeof result === "object" ? result.score : result;
+
         let message = "Keep practicing!";
         let emoji = "📚";
 
@@ -133,21 +165,114 @@ function PlayQuiz({ quizId }) {
                     <div className="result-emoji">{emoji}</div>
                     <h2 className="result-title">Quiz Complete!</h2>
                     <div className="result-score">
-                        <span className="score-number">{result}</span>
+                        <span className="score-number">{score}</span>
                         <span className="score-total">/ {questions.length}</span>
                     </div>
                     <div className="result-percentage">{percentage}%</div>
                     <p className="result-message">{message}</p>
-                    <button
-                        className="retry-button"
-                        onClick={() => {
-                            setResult(null);
-                            setResponses([]);
-                            setCurrentQuestion(0);
-                        }}
-                    >
-                        🔄 Try Again
-                    </button>
+
+                    <div className="result-actions">
+                        <button
+                            className="retry-button"
+                            onClick={() => {
+                                setResult(null);
+                                setResponses([]);
+                                setCurrentQuestion(0);
+                                setPlayerName("");
+                                setShowLeaderboard(false);
+                            }}
+                        >
+                            🔄 Try Again
+                        </button>
+                        <button
+                            className="leaderboard-toggle-button"
+                            onClick={() => setShowLeaderboard(!showLeaderboard)}
+                        >
+                            {showLeaderboard ? "Hide" : "Show"} Leaderboard 🏆
+                        </button>
+                    </div>
+
+                    {showLeaderboard && (
+                        <div className="leaderboard-section">
+                            <h3 className="leaderboard-title">🏆 Leaderboard</h3>
+                            {leaderboard.length > 0 ? (
+                                <div className="leaderboard-list">
+                                    {leaderboard.map((entry, index) => (
+                                        <div
+                                            key={entry.rank}
+                                            className={`leaderboard-entry ${entry.rank <= 3 ? 'top-three' : ''}`}
+                                        >
+                                            <span className="rank">
+                                                {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                                            </span>
+                                            <span className="player-name">{entry.playerName}</span>
+                                            <span className="score">{entry.score}/{entry.totalQuestions}</span>
+                                            <span className="percentage">{entry.percentage}%</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="no-leaderboard">No entries yet. Be the first!</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // Show player name form before final submission
+    if (showPlayerForm) {
+        return (
+            <div className="play-quiz-container">
+                <div className="player-form-card">
+                    <h2>🎮 Almost Done!</h2>
+                    <p>Enter your name to submit your score to the leaderboard</p>
+
+                    {error && (
+                        <div className="error-message">
+                            <span className="error-icon">⚠️</span>
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="form-group">
+                        <label htmlFor="player-name">Your Name</label>
+                        <input
+                            id="player-name"
+                            type="text"
+                            className="player-input"
+                            placeholder="Enter your name"
+                            value={playerName}
+                            onChange={(e) => setPlayerName(e.target.value)}
+                            disabled={submitting}
+                            autoFocus
+                        />
+                    </div>
+
+                    <div className="form-actions">
+                        <button
+                            className="cancel-button"
+                            onClick={() => setShowPlayerForm(false)}
+                            disabled={submitting}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="submit-final-button"
+                            onClick={handleFinalSubmit}
+                            disabled={submitting || !playerName.trim()}
+                        >
+                            {submitting ? (
+                                <>
+                                    <span className="button-spinner"></span>
+                                    Submitting...
+                                </>
+                            ) : (
+                                '🎯 Submit Score'
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
         );

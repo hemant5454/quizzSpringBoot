@@ -331,7 +331,7 @@
 .quiz-card-footer {
     padding: 0 2rem 2rem;
     display: flex;
-    justify-content: center;
+    gap: 0.75rem;
 }
 
 .play-button {
@@ -347,7 +347,7 @@
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
-    width: 100%;
+    flex: 1;
     justify-content: center;
 }
 
@@ -358,6 +358,128 @@
 
 .play-icon {
     font-size: 1rem;
+}
+
+.leaderboard-button {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.leaderboard-button:hover:not(:disabled) {
+    background: #667eea;
+    color: white;
+    transform: scale(1.02);
+}
+
+.leaderboard-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Card Leaderboard Section */
+.card-leaderboard {
+    padding: 1.5rem 2rem 2rem;
+    background: #f8f9fa;
+    border-top: 2px solid #e9ecef;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-leaderboard-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 1rem 0;
+    text-align: center;
+}
+
+.card-leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.card-leaderboard-entry {
+    display: grid;
+    grid-template-columns: 40px 1fr auto auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.card-leaderboard-entry:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card-leaderboard-entry.top-three-card {
+    background: linear-gradient(135deg, #fff5e6 0%, #ffe4cc 100%);
+    border: 1px solid #ffb84d;
+}
+
+.card-leaderboard-entry .entry-rank {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.card-leaderboard-entry .entry-player {
+    font-weight: 600;
+    color: #2d3748;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-leaderboard-entry .entry-score {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 0.9rem;
+}
+
+.card-leaderboard-entry .entry-percentage {
+    background: #667eea;
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.no-entries {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    margin: 1rem 0;
+}
+
+.more-entries {
+    text-align: center;
+    color: #667eea;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0.5rem 0 0 0;
 }
 
 /* Load More Section */

@@ -1,7 +1,5 @@
-import API_BASE_URL from "./apiConfig";
-
 export const fetchQuizzes = async () => {
-    const res = await fetch(`${API_BASE_URL}/quiz/all`, {
+    const res = await fetch(`http://localhost:8080/quiz/all`, {
         method: "GET"
     });
     if (!res.ok) throw new Error("Failed to fetch quizzes");
@@ -16,7 +14,7 @@ export const createQuiz = async ( {category, numQuestions, title, createdBy }) =
     console.log("createdBy:", createdBy);
 
     // 🔍 PRINT FINAL URL
-    const url = `${API_BASE_URL}/quiz/create?category=${encodeURIComponent(category)}&numQ=${numQuestions}&title=${encodeURIComponent(title)}&createdBy=${encodeURIComponent(createdBy || 'Anonymous')}`;
+    const url = `http://localhost:8080/quiz/create?category=${encodeURIComponent(category)}&numQ=${numQuestions}&title=${encodeURIComponent(title)}&createdBy=${encodeURIComponent(createdBy || 'Anonymous')}`;
     console.log("Final request URL:", url);
 
     const res = await fetch(url, {
@@ -31,26 +29,36 @@ export const createQuiz = async ( {category, numQuestions, title, createdBy }) =
 };
 
 export const fetchQuizById = async (id) => {
-    const res = await fetch(`${API_BASE_URL}/quiz/get/${id}`, {
+    const res = await fetch(`http://localhost:8080/quiz/get/${id}`, {
         method: "POST"
     });
     if (!res.ok) throw new Error("Failed to fetch quizzes2");
     return res.json();
 };
 
-export const submitQuiz = async (quizId, responses) => {
-    const res = await fetch(`${API_BASE_URL}/quiz/submit/${quizId}`, {
+export const submitQuiz = async (quizId, responses, username, playerName) => {
+    const res = await fetch(`http://localhost:8080/quiz/submit/${quizId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(responses)
+        body: JSON.stringify({
+            responses,
+            username,
+            playerName
+        })
     });
 
     if (!res.ok) throw new Error("Failed to submit quiz");
-    return res.json(); // integer score
+    return res.json();
+};
+
+export const getLeaderboard = async (quizId) => {
+    const res = await fetch(`http://localhost:8080/quiz/${quizId}/leaderboard`);
+    if (!res.ok) throw new Error("Failed to fetch leaderboard");
+    return res.json();
 };
 
 export const deleteQuiz = async (quizId) => {
-    const res = await fetch(`${API_BASE_URL}/quiz/delete/${quizId}`, {
+    const res = await fetch(`http://localhost:8080/quiz/delete/${quizId}`, {
         method: "DELETE"
     });
 
