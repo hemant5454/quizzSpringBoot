@@ -197,7 +197,7 @@ function PlayQuiz({ quizId }) {
 
             {/* Current Question */}
             <div className="question-card">
-                <h3 className="question-text">{currentQ.questionTitle || "Question text not available"}</h3>
+                <h3 className="question-text">{currentQ.QuestionTitle || "Question text not available"}</h3>
 
                 <div className="options-container">
                     {[currentQ.option1, currentQ.option2, currentQ.option3, currentQ.option4]
